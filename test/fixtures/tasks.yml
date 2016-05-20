@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  content: MyString
+  start: 2016-05-20 10:47:38
+  end: 2016-05-20 10:47:38
+  user_id: 1
+  public: false
+
+two:
+  content: MyString
+  start: 2016-05-20 10:47:38
+  end: 2016-05-20 10:47:38
+  user_id: 1
+  public: false
