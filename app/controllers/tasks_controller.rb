@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
 
-  # before_action :require_login
+  before_action :require_login
   
   def index
   	@tasks = current_user.tasks
@@ -34,7 +34,7 @@ class TasksController < ApplicationController
 
       @data << {"name": t.content, "desc": "", "values": 
         [{"id": t.id, "from": "/Date(#{t.start.to_i * 1000})/", "to": "/Date(#{t.end.to_i * 1000})/", 
-          "desc": "开始时间： #{t.start}<br>结束时间： #{t.end}", "customClass": customClass, "label": t.content}]}
+          "desc": "开始时间： #{t.start.localtime.strftime('%F %R')}<br>结束时间： #{t.end.localtime.strftime('%F %R')}", "customClass": customClass, "label": t.content}]}
     end
     respond_to do |f|
       f.json {render :json => @data.to_json}
