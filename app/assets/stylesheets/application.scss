@@ -15,3 +15,13 @@
  */
 @import "bootstrap-sprockets";
 @import "bootstrap";
+
+// import bootstrap-sprockets before bootstrap if using bootstrap >= 3.2
+@import 'bootstrap-datetimepicker';
+
+// 用于标题居中显示
+.navbar-brand {
+  transform: translateX(-50%);
+  left: 50%;
+  position: absolute;
+}

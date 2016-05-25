@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   root :to => 'home#index'
+  get 'tasks/gantt'
+  get 'tasks/gantt_data'
   resources :users
   resources :tasks
   resources :sessions

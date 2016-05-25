@@ -1,0 +1,9 @@
+<% @tasks.each do |task| %>
+<tr>
+	<th scope="row"><%= task.id %></th>
+	<td><%= task.content %></td>
+	<td><%= task.status %></td>
+	<td><%= task.start %></td>
+	<td><%= task.end %></td>
+</tr>
+<% end %>

@@ -13,5 +13,38 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap-sprockets
+//= require moment
+//= require bootstrap-datetimepicker
 //= require turbolinks
 //= require_tree .
+
+// 侧栏显示和隐藏事件
+$(document).ready(function() {
+	$(document).on("click", "#menu-toggle", function(e){
+		e.preventDefault();$("#wrapper").toggleClass("toggled");
+	});
+});
+
+// msg: flash显示的内容；type：flash的类型包括：'alert-success'和'alert-danger'
+function show_flash_msg(msg, type) {
+  var existFlashs = $('.flash-msg').find("div[style='']");
+  if (existFlashs.length > 0) {
+    existFlashs.each(function() {
+      $(this).remove();
+    });
+  }
+  var flash_msg = $('.flash-msg .alert').clone();
+  $('.flash-msg').append(flash_msg);
+  flash_msg.append("<p>" + msg + "</p>");
+  flash_msg.addClass(type);
+  flash_msg.show();
+  if (type == "alert-success") {
+    setTimeout(function() {
+      flash_msg.remove();
+    }, 5000);
+  } else {
+    setTimeout(function() {
+      flash_msg.remove();
+    }, 7000);
+  }
+}

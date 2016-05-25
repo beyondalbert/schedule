@@ -19,8 +19,9 @@ ActiveRecord::Schema.define(version: 20160520024738) do
     t.datetime "end"
     t.integer  "user_id",    limit: 4
     t.boolean  "public"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.integer  "status",     limit: 4,   default: 0
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
   end
 
   create_table "users", force: :cascade do |t|

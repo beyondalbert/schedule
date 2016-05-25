@@ -1,0 +1,32 @@
+<!-- Sidebar -->
+<div id="slidebar-white" class="slidebar-nav">
+  <nav id="navbar-white" class="navbar navbar-default" role="navigation">
+    <ul class="nav navbar-nav">
+      <li class="hidden-xs"><a class="navbar-brand" href="#"><%= current_user ? current_user.display_name : "" %></a></li>
+      <li class="sidebar-form">
+        <form class="input-group" border="0" id="af" name="af" role="search" action="/archive.php">
+          <input class="form-control" id="aa" name="aa" placeholder="Search" type="text">
+          <span class="input-group-btn">  
+            <button type="submit" class="btn btn-md" id="as" name="as" value="Go"><i class="glyphicon glyphicon-search"></i></button>
+          </span>
+        </form>
+      </li>
+      <% if current_user %>
+      <li class="<%= params[:action] == 'gantt' ? 'active' : ''%>" style="width: 100%;">
+        <a href="/tasks/gantt"><i class="glyphicon glyphicon-calendar"></i> 甘特图</a>
+      </li>
+      
+      <li class="<%= params[:action] == 'index' ? 'active' : ''%>" style="width: 100%;">
+        <a href="/tasks"><i class="glyphicon glyphicon-list-alt"></i> 任务列表</a>
+      </li>
+      <li style="width: 100%;">
+        <a href="/logout"><i class="glyphicon glyphicon-log-out"></i> 退出</a>
+      </li>
+      <% else %>
+      <li style="width: 100%;">
+        <a href="/login"><i class="glyphicon glyphicon-log-in"></i> 登陆</a>
+        </li>
+      <% end %>
+    </ul>
+  </nav><!--/.navbar -->
+</div><!--/.sidebar-nav -->
