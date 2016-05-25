@@ -10,6 +10,7 @@ worker_processes (ENV['RAILS_ENV'] == 'production' ? 2 : 1)
 # production environment, but listening on a port can be useful for local
 # debugging purposes.
 listen app_path + '/tmp/unicorn.sock', backlog: 64
+listen 8084, :tcp_nopush => true
 
 # Time-out
 timeout 300
