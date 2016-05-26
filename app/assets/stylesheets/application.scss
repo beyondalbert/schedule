@@ -25,3 +25,19 @@
   left: 50%;
   position: absolute;
 }
+
+.btn-black {
+  color: #fff;
+  background-color: #232323;
+  border-color: #222;
+}
+.btn-black:focus, .btn-black.focus {
+  color: #fff;
+  background-color: #286090;
+  border-color: #122b40;
+}
+.btn-black:hover {
+  color: #eee;
+  background-color: #28690;
+  border-color: #204d74;
+}

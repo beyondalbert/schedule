@@ -17,6 +17,21 @@ class TasksController < ApplicationController
   	end
   end
 
+  def destroy
+    @task = Task.find params[:id]
+    @task.destroy!
+    @tasks = current_user.tasks
+    respond_to do |f|
+      f.js
+    end
+  end
+
+  def change_status
+    @task = Task.find params[:id]
+    @task.update!(status: params[:status] == "0" ? 1 : 0)
+    @tasks = current_user.tasks
+  end
+
   def gantt
   end
 
@@ -25,7 +40,11 @@ class TasksController < ApplicationController
     @data = []
     @tasks.each do |t|
       if Time.now > t.end
-        customClass = "ganttRed"
+        if t.status == 1
+          customClass = "ganttGreen"
+        else
+          customClass = "ganttRed"
+        end
       elsif Time.now < t.start
         customClass = "ganttGray"
       else

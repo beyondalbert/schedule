@@ -1,9 +1,29 @@
 <% @tasks.each do |task| %>
-<tr>
-	<th scope="row"><%= task.id %></th>
+<tr data-id="<%= task.id %>">
+  <th scope="row"><%= check_box_tag 'task_status', task.status, task.status == 0 ? false : true, class: "task-done" %></th>
 	<td><%= task.content %></td>
-	<td><%= task.status %></td>
-	<td><%= task.start %></td>
-	<td><%= task.end %></td>
+	<td><%= task.status_name %></td>
+	<td><%= task.start.localtime.strftime('%F %R') %></td>
+	<td><%= task.end.localtime.strftime('%F %R') %></td>
+  <td>
+    <%= link_to task_path(task.id), remote: true, method: :delete do %>
+       <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+    <% end %>
+  </td>
 </tr>
 <% end %>
+<script type="text/javascript">
+$('.task-done').change(function() {
+    $.ajax({
+      url: "/tasks/change_status",
+      type: 'PUT',
+      data: {'id': $(this).parent().parent().data('id'), 'status': $(this).val()},
+			success: function(data, textStatus, jqXHR) {
+				console.log("success!");
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log("failed!");
+			}
+      });
+    })
+</script>

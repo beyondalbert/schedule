@@ -1,4 +1,7 @@
 <div class="gantt"></div>
 <script type="text/javascript">
-$(".gantt").gantt({source: "/tasks/gantt_data", itemsPerPage: 20, navigate: 'scroll', scale: 'days', maxScale: 'weeks', minScale: 'hours'});
+$(".gantt").gantt({source: "/tasks/gantt_data", itemsPerPage: 20, navigate: 'scroll', scale: 'days', maxScale: 'weeks', minScale: 'hours',
+    onRender: function(data) {
+      $('.dataPanel').css('height', (120 + $('.rightPanel').find('.bar').length * 21) + 'px');
+    }});
 </script>

@@ -757,7 +757,7 @@
 
                         break;
                 }
-
+                
                 return $('<div class="rightPanel"></div>').append(dataPanel);
             },
 
