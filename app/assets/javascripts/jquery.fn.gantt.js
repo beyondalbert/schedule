@@ -47,7 +47,9 @@
             onAddClick: function (data) { return; },
             onRender: function() { return; },
             onDataLoadFailed: function(data) { return; },
-            scrollToToday: true
+            scrollToToday: true,
+            scrollOnWheel: false,
+            scrollOnDrag: true
         };
 
         /**
@@ -183,21 +185,6 @@
             }
         };
 
-        // fixes https://github.com/taitems/jQuery.Gantt/issues/62
-        function ktkGetNextDate(currentDate, scaleStep) {
-            for(var minIncrements = 1;; minIncrements++) {
-                var nextDate = new Date(currentDate);
-                nextDate.setHours(currentDate.getHours() + scaleStep * minIncrements);
-
-                if (nextDate.getTime() !== currentDate.getTime()) {
-                    return nextDate;
-                }
-
-                // If code reaches here, it's because current didn't really increment (invalid local time) because of daylight-saving adjustments
-                // => retry adding 2, 3, 4 hours, and so on (until nextDate > current)
-            }
-        }
-
         // Grid management
         // ===============
 
@@ -245,6 +232,7 @@
 
                     element.dateStart = tools.getMinDate(element);
                     element.dateEnd = tools.getMaxDate(element);
+                    element.dataPanelIgnoreNextClick = false;
 
 
                     /* core.render(element); */
@@ -348,12 +336,17 @@
             dataPanel: function (element, width) {
                 var dataPanel = $('<div class="dataPanel" style="width: ' + width + 'px;"/>');
 
-                // Handle mousewheel events for scrolling the data panel
-                var mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
-                if (document.attachEvent) {
-                    element.attachEvent("on" + mousewheelevt, function (e) { core.wheelScroll(element, e); });
-                } else if (document.addEventListener) {
-                    element.addEventListener(mousewheelevt, function (e) { core.wheelScroll(element, e); }, false);
+                if (settings.scrollOnWheel) {
+                  // Handle mousewheel events for scrolling the data panel
+                  var wheel = core.wheel = 'onwheel' in element ? 'wheel' : document.onmousewheel != undefined ? "mousewheel" : "DOMMouseScroll";
+                  $(element).on(wheel, function (e) { core.wheelScroll(element, e); });
+                }
+
+                if (settings.scrollOnDrag) {
+                  dataPanel.on('touchstart', function(e) {core.dragDataPanelStart(element, dataPanel, e.originalEvent.changedTouches[0].screenX, e);});
+                  dataPanel.on('touchend', function(e) {core.dragDataPanelStop(element, dataPanel);});
+                  dataPanel.on('mousedown', function(e) {core.dragDataPanelStart(element, dataPanel, e.screenX, e);});
+                  dataPanel.on('mouseup mouseout', function(e) {core.dragDataPanelStop(element, dataPanel);});
                 }
 
                 // Handle click events and dispatch to registered `onAddClick`
@@ -361,6 +354,12 @@
                 dataPanel.click(function (e) {
 
                     e.stopPropagation();
+
+                    if (element.dataPanelIgnoreNextClick) {
+                      element.dataPanelIgnoreNextClick = false;
+                      return dataPanel;
+                    }
+
                     var corrX/* <- never used? */, corrY;
                     var leftpanel = $(element).find(".fn-gantt .leftPanel");
                     var datapanel = $(element).find(".fn-gantt .dataPanel");
@@ -681,7 +680,7 @@
                     default:
                         range = tools.parseDateRange(element.dateStart, element.dateEnd);
 
-                        var dateBefore = ktkGetNextDate(range[0], -1);
+                        var dateBefore = tools.ktkGetNextDate(range[0], -1);
                         var year = dateBefore.getFullYear();
                         var month = dateBefore.getMonth();
                         var day = dateBefore; // <- never used?
@@ -940,7 +939,7 @@
             // **Progress Bar**
             // Return an element representing a progress of position within
             // the entire chart
-            createProgressBar: function (days, id, cls, desc, label, dataObj) {
+            createProgressBar: function (days, id, cls, desc, label, dataObj, element) {
                 var cellWidth = tools.getCellSize();
                 var barMarg = tools.getProgressBarMargin() || 0;
                 var bar = $('<div class="bar"><div class="fn-label">' + label + '</div></div>')
@@ -969,7 +968,13 @@
                 }
                 bar.click(function (e) {
                     e.stopPropagation();
-                    settings.onItemClick($(this).data("dataObj"));
+
+                    if (element.dataPanelIgnoreNextClick) {
+                      element.dataPanelIgnoreNextClick = false;
+                      e.preventDefault();
+                    } else {
+                      settings.onItemClick($(this).data("dataObj"));
+                    }
                 });
                 return bar;
             },
@@ -1052,7 +1057,8 @@
                                                 day.customClass ? day.customClass : "",
                                                 day.desc ? day.desc : "",
                                                 day.label ? day.label : "",
-                                                day.dataObj ? day.dataObj : null
+                                                day.dataObj ? day.dataObj : null,
+                                                element
                                             );
 
                                     // find row
@@ -1096,7 +1102,8 @@
                                              day.customClass ? day.customClass : "",
                                              day.desc ? day.desc : "",
                                              day.label ? day.label : "",
-                                            day.dataObj ? day.dataObj : null
+                                            day.dataObj ? day.dataObj : null,
+                                            element
                                         );
 
                                     // find row
@@ -1137,7 +1144,8 @@
                                         day.customClass ? day.customClass : "",
                                         day.desc ? day.desc : "",
                                         day.label ? day.label : "",
-                                        day.dataObj ? day.dataObj : null
+                                        day.dataObj ? day.dataObj : null,
+                                        element
                                     );
 
                                     // find row
@@ -1164,7 +1172,8 @@
                                                 day.customClass ? day.customClass : "",
                                                 day.desc ? day.desc : "",
                                                 day.label ? day.label : "",
-                                                day.dataObj ? day.dataObj : null
+                                                day.dataObj ? day.dataObj : null,
+                                                element
                                         );
 
                                     // find row
@@ -1334,9 +1343,17 @@
             // Move chart via mousewheel
             wheelScroll: function (element, e) {
 				e.preventDefault(); // e is a jQuery Event
-                var delta = e.detail ? e.detail * (-50) : e.wheelDelta / 120 * 50;
+                // var delta = e.detail ? e.detail * (-50) : e.wheelDelta / 120 * 50;
+                var delta;
 
-                core.scrollPanel(element, delta);
+                if (core.wheel === 'wheel')
+                  delta = e.originalEvent.deltaY;
+                else if (core.wheel === 'mousewheel')
+                  delta = -1/40 * e.originalEvent.wheelDelta;
+                else
+                  delta = e.originalEvent.detail;
+
+                core.scrollPanel(element, -50 * delta);
 
                 clearTimeout(element.scrollNavigation.repositionDelay);
                 element.scrollNavigation.repositionDelay = setTimeout(core.repositionLabel, 50, element);
@@ -1453,12 +1470,56 @@
                 } else if (element.loader) {
                   element.loader.detach();
                 }
+            },
+
+            dragDataPanelStart: function(element, dataPanel, screenX, e) {
+              element.scrollNavigation.dragStartX = screenX;
+              dataPanel.on('touchmove', function(e) {
+                core.dragDataPanelMove(element, e.originalEvent.changedTouches[0].screenX, e);
+              });
+              dataPanel.on('mousemove', function(e) {core.dragDataPanelMove(element, e.screenX, e);});
+            },
+
+            dragDataPanelMove: function(element, screenX, e) {
+              if (typeof element.scrollNavigation.dragStartX != 'undefined') {
+                var time = new Date().getTime();
+
+                if (time - element.scrollNavigation.lastDragUpdate > 1000/30.0) {
+                  core.scrollPanel(element, screenX - element.scrollNavigation.dragStartX);
+                  element.scrollNavigation.dragStartX = screenX;
+                  element.scrollNavigation.lastDragUpdate = time;
+                }
+
+                element.dataPanelIgnoreNextClick = true;
+                e.preventDefault();
+              }
+            },
+
+            dragDataPanelStop: function(element, dataPanel) {
+              element.scrollNavigation.dragStartX = undefined;
+              dataPanel.off('touchmove');
+              dataPanel.off('mousemove');
             }
         };
 
         // Utility functions
         // =================
         var tools = {
+
+
+          ktkGetNextDate: function(currentDate, scaleStep) {
+            for(var minIncrements = 1;; minIncrements++) {
+              var nextDate = new Date(currentDate);
+              nextDate.setHours(currentDate.getHours() + scaleStep * minIncrements);
+          
+              if(nextDate.getTime() != currentDate.getTime()) {
+                    return nextDate;
+                }
+          
+                // If code reaches here, it's because current didn't really increment (invalid local time) because of daylight-saving adjustments
+                // => retry adding 2, 3, 4 hours, and so on (until nextDate > current)
+            }
+          },
 
             // Return the maximum available date in data depending on the scale
             getMaxDate: function (element) {
@@ -1584,7 +1645,7 @@
                     */
 
                     // GR Fix Begin
-                    current = ktkGetNextDate(dayStartTime, scaleStep);
+                    current = tools.ktkGetNextDate(dayStartTime, scaleStep);
                     // GR Fix End
 
                     i++;
@@ -1775,7 +1836,9 @@
                 panelMargin: 0,
                 repositionDelay: 0,
                 panelMaxPos: 0,
-                canScroll: true
+                canScroll: true,
+                dragStartX: undefined,
+                lastDragUpdate: new Date().getTime(),
             };
 
             this.gantt = null;
