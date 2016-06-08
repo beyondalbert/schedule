@@ -1,20 +1,33 @@
 class TasksController < ApplicationController
 
   before_action :require_login
-  
+
   def index
-  	@tasks = current_user.tasks
+    @tasks = current_user.tasks
   end
 
   def create
-  	@task = Task.new(task_params.merge!({user_id: current_user.id}))
+    @task = Task.new(task_params.merge!({user_id: current_user.id}))
     @task.start = task_params[:start] + "+08:00"
     @task.end = task_params[:end] + "+08:00"
-  	@task.save!
-  	@tasks = current_user.tasks
-  	respond_to do |f|
+    @task.save!
+    @tasks = current_user.tasks
+    respond_to do |f|
       f.js
-  	end
+    end
+  end
+
+  def update
+    @task = Task.find(params[:id])
+    @task.content = task_params[:content]
+    @task.start = task_params[:start] + "+08:00"
+    @task.end = task_params[:end] + "+08:00"
+    @task.save!
+
+    @tasks = current_user.tasks
+    respond_to do |f|
+      f.js
+    end
   end
 
   def destroy
@@ -52,8 +65,8 @@ class TasksController < ApplicationController
       end
 
       @data << {"name": t.content, "desc": "", "values": 
-        [{"id": t.id, "from": "/Date(#{t.start.to_i * 1000})/", "to": "/Date(#{t.end.to_i * 1000})/", 
-          "desc": "开始时间： #{t.start.localtime.strftime('%F %R')}<br>结束时间： #{t.end.localtime.strftime('%F %R')}", "customClass": customClass, "label": t.content}]}
+                [{"id": t.id, "from": "/Date(#{t.start.to_i * 1000})/", "to": "/Date(#{t.end.to_i * 1000})/", 
+                  "desc": "开始时间： #{t.start.localtime.strftime('%F %R')}<br>结束时间： #{t.end.localtime.strftime('%F %R')}", "customClass": customClass, "label": t.content}]}
     end
     respond_to do |f|
       f.json {render :json => @data.to_json}
@@ -62,6 +75,6 @@ class TasksController < ApplicationController
 
   private
   def task_params
-  	params.require(:task).permit(:content, :start, :end)
+    params.require(:task).permit(:content, :start, :end)
   end
 end

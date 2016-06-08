@@ -1,14 +1,15 @@
 <% @tasks.each do |task| %>
 <tr data-id="<%= task.id %>">
   <th scope="row"><%= check_box_tag 'task_status', task.status, task.status == 0 ? false : true, class: "task-done" %></th>
-	<td><%= task.content %></td>
+	<td class="task-content"><%= task.content %></td>
 	<td><%= task.status_name %></td>
-	<td><%= task.start.localtime.strftime('%F %R') %></td>
-	<td><%= task.end.localtime.strftime('%F %R') %></td>
+	<td class="task-start"><%= task.start.localtime.strftime('%F %R') %></td>
+	<td class="task-end"><%= task.end.localtime.strftime('%F %R') %></td>
   <td>
     <%= link_to task_path(task.id), remote: true, method: :delete do %>
        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
     <% end %>
+    <a href="#" class="task-edit" style="margin-left: 10px;"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
   </td>
 </tr>
 <% end %>
@@ -26,4 +27,11 @@ $('.task-done').change(function() {
 			}
       });
     })
+$('.task-edit').click(function() {
+    $('#task-edit-modal').modal('toggle');
+    $('#task-start-edit').val($(this).parent().parent().find('.task-start').text());
+    $('#task-end-edit').val($(this).parent().parent().find('.task-end').text());
+    $('#task-content-edit').val($(this).parent().parent().find('.task-content').text());
+    $('#task-edit-btn').data('id', $(this).parent().parent().data('id'));
+    });
 </script>

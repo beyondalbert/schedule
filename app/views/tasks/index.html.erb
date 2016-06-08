@@ -54,6 +54,50 @@
 </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="task-edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改任务</h4>
+      </div>
+      <div class="modal-body">
+        <form id="task-edit-form">
+		    <div class="form-group">
+		    	<div class='input-group date' id='datetimepicker8'>
+		    		<input id="task-start-edit" type='text' name='task[start]' class="form-control" placeholder="开始时间"/>
+		    		<span class="input-group-addon">
+		    			<span class="glyphicon glyphicon-calendar"></span>
+		    		</span>
+		    	</div>
+		    </div>
+
+		    <div class="form-group">
+		    	<div class='input-group date' id='datetimepicker9'>
+		    		<input id="task-end-edit" type='text' name="task[end]" class="form-control" placeholder="结束时间" />
+		    		<span class="input-group-addon">
+		    			<span class="glyphicon glyphicon-calendar"></span>
+		    		</span>
+		    	</div>
+		    </div>
+
+	      <div class="input-group">
+	      	<input id="task-content-edit" type="text" name="task[content]" class="form-control" placeholder="输入你的任务～">
+	      	<span class="input-group-btn">
+	      		<button id="task-add-btn" class="btn btn-default" type="button">添加</button>
+	      	</span>
+	      </div><!-- /input-group -->
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button id="task-edit-btn" type="button" class="btn btn-primary">修改</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
 	$(function () {
 		$('#datetimepicker6').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});
@@ -66,6 +110,18 @@
 		});
 		$("#datetimepicker7").on("dp.change", function (e) {
 			$('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+		});
+
+		$('#datetimepicker8').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});
+		$('#datetimepicker9').datetimepicker({
+            useCurrent: false, //Important! See issue #1075
+            format: 'YYYY-MM-DD HH:mm:ss'
+        });
+		$("#datetimepicker8").on("dp.change", function (e) {
+			$('#datetimepicker9').data("DateTimePicker").minDate(e.date);
+		});
+		$("#datetimepicker9").on("dp.change", function (e) {
+			$('#datetimepicker8').data("DateTimePicker").maxDate(e.date);
 		});
 	});
 
@@ -82,4 +138,18 @@
 			}
 		});
 	});
+
+$('#task-edit-btn').click(function() {
+    $.ajax({
+      url: '/tasks/' + $(this).data('id'),
+      type: 'PUT',
+      data: $('#task-edit-form').serialize(),
+			success: function(data, textStatus, jqXHR) {
+				console.log("success!");
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log("failed!");
+			}
+      });
+    });
 </script>
