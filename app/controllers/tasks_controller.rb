@@ -54,7 +54,7 @@ class TasksController < ApplicationController
     @tasks.each do |t|
       if Time.now > t.end
         if t.status == 1
-          customClass = "ganttGreen"
+          customClass = "ganttBlue"
         else
           customClass = "ganttRed"
         end
