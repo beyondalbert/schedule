@@ -1,4 +1,4 @@
-<% @tasks.each do |task| %>
+<% tasks.each do |task| %>
 <tr data-id="<%= task.id %>">
   <th scope="row"><%= check_box_tag 'task_status', task.status, task.status == 0 ? false : true, class: "task-done" %></th>
 	<td class="task-content"><%= task.content %></td>

@@ -3,7 +3,8 @@ class TasksController < ApplicationController
   before_action :require_login
 
   def index
-    @tasks = current_user.tasks
+    @history_tasks = current_user.tasks.where(status: 1)
+    @current_tasks = current_user.tasks.where(status: 0)
   end
 
   def create
@@ -11,7 +12,7 @@ class TasksController < ApplicationController
     @task.start = task_params[:start] + "+08:00"
     @task.end = task_params[:end] + "+08:00"
     @task.save!
-    @tasks = current_user.tasks
+    @tasks = current_user.tasks.where(status: 0)
     respond_to do |f|
       f.js
     end
@@ -49,7 +50,7 @@ class TasksController < ApplicationController
   end
 
   def gantt_data
-    @tasks = current_user.tasks
+    @tasks = current_user.tasks.where(status: 0)
     @data = []
     @tasks.each do |t|
       if Time.now > t.end

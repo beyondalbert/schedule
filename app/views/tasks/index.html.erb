@@ -1,39 +1,62 @@
 <div class="col-sm-6">
   <form id="add-task-form">
-	<div class='col-sm-6' style="padding-left: 0px;padding-right: 0px;">
-		<div class="form-group">
-			<div class='input-group date' id='datetimepicker6'>
-				<input type='text' name='task[start]' class="form-control" placeholder="开始时间"/>
-				<span class="input-group-addon">
-					<span class="glyphicon glyphicon-calendar"></span>
-				</span>
-			</div>
-		</div>
-	</div>
-	<div class='col-sm-6' style="padding-left: 0px;padding-right: 0px;">
-		<div class="form-group">
-			<div class='input-group date' id='datetimepicker7'>
-				<input type='text' name="task[end]" class="form-control" placeholder="结束时间" />
-				<span class="input-group-addon">
-					<span class="glyphicon glyphicon-calendar"></span>
-				</span>
-			</div>
-		</div>
-	</div>
-
-	<div class="input-group">
-		<input type="text" name="task[content]" class="form-control" placeholder="输入你的任务～">
-		<span class="input-group-btn">
-			<button id="task-add-btn" class="btn btn-default" type="button">添加</button>
-		</span>
-	</div><!-- /input-group -->
+	  <div class='col-sm-6' style="padding-left: 0px;padding-right: 0px;">
+	  	<div class="form-group">
+	  		<div class='input-group date' id='datetimepicker6'>
+	  			<input type='text' name='task[start]' class="form-control" placeholder="开始时间"/>
+	  			<span class="input-group-addon">
+	  				<span class="glyphicon glyphicon-calendar"></span>
+	  			</span>
+	  		</div>
+	  	</div>
+	  </div>
+	  <div class='col-sm-6' style="padding-left: 0px;padding-right: 0px;">
+	  	<div class="form-group">
+	  		<div class='input-group date' id='datetimepicker7'>
+	  			<input type='text' name="task[end]" class="form-control" placeholder="结束时间" />
+	  			<span class="input-group-addon">
+	  				<span class="glyphicon glyphicon-calendar"></span>
+	  			</span>
+	  		</div>
+	  	</div>
+	  </div>
+    <div class="form-group">
+	    <div class="input-group">
+	    	<input type="text" name="task[content]" class="form-control" placeholder="输入你的任务～">
+	    	<span class="input-group-btn">
+	    		<button id="task-add-btn" class="btn btn-default" type="button">添加</button>
+	    	</span>
+      </div><!-- /input-group -->
+    </div>
   </form>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">当前列表</h3>
+    </div>
+    <div class="panel-body table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>任务内容</th>
+            <th>状态</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+          </tr>
+        </thead>
+        <tbody id="current-tasks-list">
+        <%= render partial: 'list', locals: {tasks: @current_tasks}%>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <div class="col-sm-6">
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">任务列表</h3>
+    <h3 class="panel-title">历史列表</h3>
   </div>
   <div class="panel-body table-responsive">
     <table class="table table-hover">
@@ -47,7 +70,7 @@
         </tr>
       </thead>
       <tbody id="tasks-list">
-        <%= render partial: 'list'%>
+      <%= render partial: 'list', locals: {tasks: @history_tasks }%>
       </tbody>
     </table>
   </div>
