@@ -768,7 +768,7 @@
                 if (settings.navigate === "scroll") {
                     ganttNavigate = $('<div class="navigate" />')
                         .append($('<div class="nav-slider center-block" />')
-                            .append($('<div class="nav-slider-left col-sm-4" />')
+                            .append($('<div class="nav-slider-left" />')
                                 .append($('<button type="button" class="nav-link nav-page-back"/>')
                                     .html('&lt;')
                                     .click(function () {
@@ -813,7 +813,7 @@
                                             core.navigateTo(element, tools.getCellSize() * 3);
                                         }
                                     })))
-                            .append($('<div class="nav-slider-content col-sm-4" />')
+                            .append($('<div class="nav-slider-content" />')
                                     .append($('<div class="nav-slider-bar" />')
                                             .append($('<a class="nav-slider-button" />')
                                                 )
@@ -829,7 +829,7 @@
                                                 })
                                             )
                                         )
-                            .append($('<div class="nav-slider-right col-sm-4" />')
+                            .append($('<div class="nav-slider-right" />')
                                 .append($('<button type="button" class="nav-link nav-next-day"/>')
                                     .html('&gt;')
                                     .click(function () {
