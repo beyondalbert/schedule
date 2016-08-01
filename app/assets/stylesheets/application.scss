@@ -41,3 +41,9 @@
   background-color: #28690;
   border-color: #204d74;
 }
+
+.flash-div {
+  position: fixed;
+  top: 2px;
+  z-index: 9999;
+}

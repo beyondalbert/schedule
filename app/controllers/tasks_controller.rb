@@ -25,7 +25,8 @@ class TasksController < ApplicationController
     @task.end = task_params[:end] + "+08:00"
     @task.save!
 
-    @tasks = current_user.tasks
+    @current_tasks = current_user.tasks.where(status: 0)
+    @history_tasks = current_user.tasks.where(status: 1)
     respond_to do |f|
       f.js
     end
@@ -43,7 +44,9 @@ class TasksController < ApplicationController
   def change_status
     @task = Task.find params[:id]
     @task.update!(status: params[:status] == "0" ? 1 : 0)
-    @tasks = current_user.tasks
+
+    @current_tasks = current_user.tasks.where(status: 0)
+    @history_tasks = current_user.tasks.where(status: 1)
   end
 
   def gantt

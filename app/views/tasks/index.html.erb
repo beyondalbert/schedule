@@ -175,4 +175,25 @@ $('#task-edit-btn').click(function() {
 			}
       });
     });
+
+$(document).on('click', '.task-done', function() {
+    $.ajax({
+      url: "/tasks/change_status",
+      type: 'PUT',
+      data: {'id': $(this).parent().parent().data('id'), 'status': $(this).val()},
+			success: function(data, textStatus, jqXHR) {
+				console.log("success!");
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log("failed!");
+			}
+      });
+    })
+$(document).on('click', '.task-edit', function() {
+    $('#task-edit-modal').modal('toggle');
+    $('#task-start-edit').val($(this).parent().parent().find('.task-start').text());
+    $('#task-end-edit').val($(this).parent().parent().find('.task-end').text());
+    $('#task-content-edit').val($(this).parent().parent().find('.task-content').text());
+    $('#task-edit-btn').data('id', $(this).parent().parent().data('id'));
+    });
 </script>

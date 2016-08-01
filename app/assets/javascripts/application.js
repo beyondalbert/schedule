@@ -41,7 +41,7 @@ function show_flash_msg(msg, type) {
   if (type == "alert-success") {
     setTimeout(function() {
       flash_msg.remove();
-    }, 5000);
+    }, 3000);
   } else {
     setTimeout(function() {
       flash_msg.remove();

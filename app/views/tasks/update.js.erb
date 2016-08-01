@@ -1,3 +1,4 @@
-$('#tasks-list').html("<%= escape_javascript(render partial: "list") %>");
+$('#current-tasks-list').html("<%= escape_javascript(render partial: "list", locals: {tasks: @current_tasks}) %>");
+$('#tasks-list').html("<%= escape_javascript(render partial: "list", locals: {tasks: @history_tasks}) %>");
 $('#task-edit-modal').modal('toggle');
 show_flash_msg("更新成功！", "alert-success");
