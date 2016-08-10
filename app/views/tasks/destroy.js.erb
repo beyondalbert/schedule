@@ -1,2 +1,3 @@
-$('#tasks-list').html("<%= escape_javascript(render partial: "list") %>");
+$('#tasks-list').html("<%= escape_javascript(render partial: "list", locals: {tasks: @history_tasks}) %>");
+$('#current-tasks-list').html("<%= escape_javascript(render partial: "list", locals: {tasks: @current_tasks}) %>");
 show_flash_msg("删除成功！", "alert-success");

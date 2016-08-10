@@ -35,7 +35,8 @@ class TasksController < ApplicationController
   def destroy
     @task = Task.find params[:id]
     @task.destroy!
-    @tasks = current_user.tasks
+    @history_tasks = current_user.tasks.where(status: 1)
+    @current_tasks = current_user.tasks.where(status: 0)
     respond_to do |f|
       f.js
     end

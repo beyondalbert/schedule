@@ -1,2 +1,2 @@
-$('#current-tasks-list').html("<%= escape_javascript(render partial: "list", local: {tasks: @tasks}) %>");
+$('#current-tasks-list').html("<%= escape_javascript(render partial: "list", locals: {tasks: @tasks}) %>");
 show_flash_msg("添加成功！", "alert-success");
