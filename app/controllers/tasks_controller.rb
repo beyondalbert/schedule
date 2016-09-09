@@ -4,7 +4,7 @@ class TasksController < ApplicationController
 
   def index
     @history_tasks = current_user.tasks.where(status: 1)
-    @current_tasks = current_user.tasks.where(status: 0)
+    @current_tasks = current_user.tasks.where(status: 0).reverse_order
   end
 
   def create
@@ -12,7 +12,7 @@ class TasksController < ApplicationController
     @task.start = task_params[:start].to_time
     @task.end = task_params[:end].to_time
     @task.save!
-    @tasks = current_user.tasks.where(status: 0)
+    @tasks = current_user.tasks.where(status: 0).reverse_order
     respond_to do |f|
       f.js
     end
@@ -25,7 +25,7 @@ class TasksController < ApplicationController
     @task.end = task_params[:end].to_time
     @task.save!
 
-    @current_tasks = current_user.tasks.where(status: 0)
+    @current_tasks = current_user.tasks.where(status: 0).reverse_order
     @history_tasks = current_user.tasks.where(status: 1)
     respond_to do |f|
       f.js
@@ -36,7 +36,7 @@ class TasksController < ApplicationController
     @task = Task.find params[:id]
     @task.destroy!
     @history_tasks = current_user.tasks.where(status: 1)
-    @current_tasks = current_user.tasks.where(status: 0)
+    @current_tasks = current_user.tasks.where(status: 0).reverse_order
     respond_to do |f|
       f.js
     end
@@ -46,7 +46,7 @@ class TasksController < ApplicationController
     @task = Task.find params[:id]
     @task.update!(status: params[:status] == "0" ? 1 : 0)
 
-    @current_tasks = current_user.tasks.where(status: 0)
+    @current_tasks = current_user.tasks.where(status: 0).reverse_order
     @history_tasks = current_user.tasks.where(status: 1)
   end
 

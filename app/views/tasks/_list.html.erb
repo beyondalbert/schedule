@@ -3,15 +3,13 @@
   <td scope="row"><%= check_box_tag 'task_status', task.status, task.status == 0 ? false : true, class: "task-done" %></td>
 	<td class="task-content"><%= task.content %></td>
 	<td><%= task.status_name %></td>
-	<td class="task-start">
-  开始：<%= task.start.localtime.strftime('%F') %>
+	<td class="task-time">
+  开始:<span class="task-start"><%= task.start.localtime.strftime('%F') %></span>
   <br>
-  结束：<%= task.end.localtime.strftime('%F') %>
+  结束:<span class="task-end"><%= task.end.localtime.strftime('%F') %></span>
   </td>
   <td>
-    <%= link_to task_path(task.id), remote: true, method: :delete do %>
-       <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-    <% end %>
+    <a href="#" class="task-destroy"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
     <a href="#" class="task-edit" style="margin-left: 10px;"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
   </td>
 </tr>
