@@ -1,32 +1,34 @@
 <div class="col-sm-6">
   <form id="add-task-form">
-	  <div class='col-sm-6' style="padding-left: 0px;padding-right: 0px;">
+    <div id="date-range" class="row" style="margin: 0px 0px;">
+	  <div class='col-sm-6' style="padding: 0px;">
 	  	<div class="form-group">
-	  		<div class='input-group date' id='datetimepicker6'>
-	  			<input type='text' name='task[start]' class="form-control" placeholder="开始时间"/>
+	  		<div class='input-group'>
+	  			<input id="task-start" type='text' name='task[start]' class="form-control" placeholder="开始时间" />
 	  			<span class="input-group-addon">
 	  				<span class="glyphicon glyphicon-calendar"></span>
 	  			</span>
 	  		</div>
 	  	</div>
 	  </div>
-	  <div class='col-sm-6' style="padding-left: 0px;padding-right: 0px;">
+	  <div class='col-sm-6' style="padding: 0px;">
 	  	<div class="form-group">
-	  		<div class='input-group date' id='datetimepicker7'>
-	  			<input type='text' name="task[end]" class="form-control" placeholder="结束时间" />
+	  		<div class='input-group'>
+	  			<input id="task-end" itype='text' name="task[end]" class="form-control" placeholder="结束时间"  />
 	  			<span class="input-group-addon">
 	  				<span class="glyphicon glyphicon-calendar"></span>
 	  			</span>
 	  		</div>
 	  	</div>
 	  </div>
+	</div>
     <div class="form-group">
 	    <div class="input-group">
 	    	<input type="text" name="task[content]" class="form-control" placeholder="输入你的任务～">
 	    	<span class="input-group-btn">
 	    		<button id="task-add-btn" class="btn btn-default" type="button">添加</button>
 	    	</span>
-      </div><!-- /input-group -->
+      </div>
     </div>
   </form>
 
@@ -41,8 +43,8 @@
             <th>#</th>
             <th>任务内容</th>
             <th>状态</th>
-            <th>开始时间</th>
-            <th>结束时间</th>
+            <th>时间</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="current-tasks-list">
@@ -65,8 +67,8 @@
           <th>#</th>
           <th>任务内容</th>
           <th>状态</th>
-          <th>开始时间</th>
-          <th>结束时间</th>
+          <th>时间</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="tasks-list">
@@ -87,8 +89,9 @@
       </div>
       <div class="modal-body">
         <form id="task-edit-form">
-		    <div class="form-group">
-		    	<div class='input-group date' id='datetimepicker8'>
+          <div id="edit-date-range" class="row" style="margin: 0px 0px;">
+		    <div class="form-group col-sm-6"  style="padding: 0px;">
+		    	<div class='input-group'>
 		    		<input id="task-start-edit" type='text' name='task[start]' class="form-control" placeholder="开始时间"/>
 		    		<span class="input-group-addon">
 		    			<span class="glyphicon glyphicon-calendar"></span>
@@ -96,22 +99,19 @@
 		    	</div>
 		    </div>
 
-		    <div class="form-group">
-		    	<div class='input-group date' id='datetimepicker9'>
+		    <div class="form-group col-sm-6"  style="padding: 0px;">
+		    	<div class='input-group'>
 		    		<input id="task-end-edit" type='text' name="task[end]" class="form-control" placeholder="结束时间" />
 		    		<span class="input-group-addon">
 		    			<span class="glyphicon glyphicon-calendar"></span>
 		    		</span>
 		    	</div>
 		    </div>
-
-	      <div class="input-group">
-	      	<input id="task-content-edit" type="text" name="task[content]" class="form-control" placeholder="输入你的任务～">
-	      	<span class="input-group-btn">
-	      		<button id="task-add-btn" class="btn btn-default" type="button">添加</button>
-	      	</span>
+		  </div>
+	      <div class="form-group">
+	      	<input id="task-content-edit" type="text" name="task[content]" class="form-control">
 	      </div><!-- /input-group -->
-      </form>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -122,30 +122,40 @@
 </div>
 
 <script type="text/javascript">
-	$(function () {
-		$('#datetimepicker6').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});
-		$('#datetimepicker7').datetimepicker({
-            useCurrent: false, //Important! See issue #1075
-            format: 'YYYY-MM-DD HH:mm:ss'
-        });
-		$("#datetimepicker6").on("dp.change", function (e) {
-			$('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-		});
-		$("#datetimepicker7").on("dp.change", function (e) {
-			$('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-		});
+	$('#date-range').dateRangePicker(
+	{
+		separator : ' to ',
+		language: 'cn',
+		getValue: function()
+		{
+			if ($('#task-start').val() && $('#task-end').val() )
+				return $('#task-start').val() + ' to ' + $('#task-end').val();
+			else
+				return '';
+		},
+		setValue: function(s,s1,s2)
+		{
+			$('#task-start').val(s1);
+			$('#task-end').val(s2);
+		}
+	});
 
-		$('#datetimepicker8').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});
-		$('#datetimepicker9').datetimepicker({
-            useCurrent: false, //Important! See issue #1075
-            format: 'YYYY-MM-DD HH:mm:ss'
-        });
-		$("#datetimepicker8").on("dp.change", function (e) {
-			$('#datetimepicker9').data("DateTimePicker").minDate(e.date);
-		});
-		$("#datetimepicker9").on("dp.change", function (e) {
-			$('#datetimepicker8').data("DateTimePicker").maxDate(e.date);
-		});
+	$('#edit-date-range').dateRangePicker(
+	{
+		separator : ' to ',
+		language: 'cn',
+		getValue: function()
+		{
+			if ($('#task-start-edit').val() && $('#task-end-edit').val() )
+				return $('#task-start-edit').val() + ' to ' + $('#task-end-edit').val();
+			else
+				return '';
+		},
+		setValue: function(s,s1,s2)
+		{
+			$('#task-start-edit').val(s1);
+			$('#task-end-edit').val(s2);
+		}
 	});
 
 	$('#task-add-btn').click(function() {

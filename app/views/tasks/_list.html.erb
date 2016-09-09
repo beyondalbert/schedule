@@ -1,10 +1,13 @@
 <% tasks.each do |task| %>
-<tr data-id="<%= task.id %>">
-  <th scope="row"><%= check_box_tag 'task_status', task.status, task.status == 0 ? false : true, class: "task-done" %></th>
+<tr class="task-row" data-id="<%= task.id %>">
+  <td scope="row"><%= check_box_tag 'task_status', task.status, task.status == 0 ? false : true, class: "task-done" %></td>
 	<td class="task-content"><%= task.content %></td>
 	<td><%= task.status_name %></td>
-	<td class="task-start"><%= task.start.localtime.strftime('%F %R') %></td>
-	<td class="task-end"><%= task.end.localtime.strftime('%F %R') %></td>
+	<td class="task-start">
+  开始：<%= task.start.localtime.strftime('%F') %>
+  <br>
+  结束：<%= task.end.localtime.strftime('%F') %>
+  </td>
   <td>
     <%= link_to task_path(task.id), remote: true, method: :delete do %>
        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>

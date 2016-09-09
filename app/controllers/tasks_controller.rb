@@ -9,8 +9,8 @@ class TasksController < ApplicationController
 
   def create
     @task = Task.new(task_params.merge!({user_id: current_user.id}))
-    @task.start = task_params[:start] + "+08:00"
-    @task.end = task_params[:end] + "+08:00"
+    @task.start = task_params[:start].to_time
+    @task.end = task_params[:end].to_time
     @task.save!
     @tasks = current_user.tasks.where(status: 0)
     respond_to do |f|
@@ -21,8 +21,8 @@ class TasksController < ApplicationController
   def update
     @task = Task.find(params[:id])
     @task.content = task_params[:content]
-    @task.start = task_params[:start] + "+08:00"
-    @task.end = task_params[:end] + "+08:00"
+    @task.start = task_params[:start].to_time
+    @task.end = task_params[:end].to_time
     @task.save!
 
     @current_tasks = current_user.tasks.where(status: 0)
@@ -71,7 +71,7 @@ class TasksController < ApplicationController
 
       @data << {"name": t.content, "desc": "", "values": 
                 [{"id": t.id, "from": "/Date(#{t.start.to_i * 1000})/", "to": "/Date(#{t.end.to_i * 1000})/", 
-                  "desc": "开始时间： #{t.start.localtime.strftime('%F %R')}<br>结束时间： #{t.end.localtime.strftime('%F %R')}", "customClass": customClass, "label": t.content}]}
+                  "desc": "#{t.content}<br>开始时间： #{t.start.localtime.strftime('%F')}<br>结束时间： #{t.end.localtime.strftime('%F')}", "customClass": customClass, "label": t.content}]}
     end
     respond_to do |f|
       f.json {render :json => @data.to_json}

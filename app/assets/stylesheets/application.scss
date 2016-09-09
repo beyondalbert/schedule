@@ -17,7 +17,6 @@
 @import "bootstrap";
 
 // import bootstrap-sprockets before bootstrap if using bootstrap >= 3.2
-@import 'bootstrap-datetimepicker';
 
 // 用于标题居中显示
 .navbar-brand {
@@ -46,4 +45,8 @@
   position: fixed;
   top: 2px;
   z-index: 9999;
+}
+
+.task-row td {
+  vertical-align: middle !important;
 }
