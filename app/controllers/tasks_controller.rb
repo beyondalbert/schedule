@@ -10,7 +10,7 @@ class TasksController < ApplicationController
       params[:q] = params[:q].merge!({'user_id_eq' => current_user.id})
     end
     @q = Task.ransack(params[:q])
-    @history_tasks = @q.result.where(status: 1)
+    @history_tasks = @q.result.where(status: 1).paginate(:page => params[:page], :per_page => 10)
     @current_tasks = @q.result.where(status: 0).reverse_order
   end
 
