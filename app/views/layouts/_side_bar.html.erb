@@ -3,7 +3,7 @@
   <nav id="navbar-white" class="navbar navbar-default" role="navigation">
     <ul class="nav navbar-nav">
       <li class="hidden-xs"><a class="navbar-brand" href="#"><%= current_user ? current_user.display_name : "" %></a></li>
-      <% unless params[:action] == "gantt" %>
+      <% if params[:action] == "index" && params[:controller] == "tasks" %>
         <li class="sidebar-form">
           <%= search_form_for @q, class: 'input-group' do |f| %>
             <%= f.search_field :content_cont, class: "form-control", placeholder: "搜索" %>
