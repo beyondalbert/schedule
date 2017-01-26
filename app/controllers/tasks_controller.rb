@@ -3,8 +3,15 @@ class TasksController < ApplicationController
   before_action :require_login
 
   def index
-    @history_tasks = current_user.tasks.where(status: 1)
-    @current_tasks = current_user.tasks.where(status: 0).reverse_order
+    if params[:q].nil?
+      params[:q] = {}
+      params[:q][:user_id_eq] = current_user.id
+    else
+      params[:q] = params[:q].merge!({'user_id_eq' => current_user.id})
+    end
+    @q = Task.ransack(params[:q])
+    @history_tasks = @q.result.where(status: 1)
+    @current_tasks = @q.result.where(status: 0).reverse_order
   end
 
   def create

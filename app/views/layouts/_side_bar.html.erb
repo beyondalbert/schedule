@@ -3,14 +3,16 @@
   <nav id="navbar-white" class="navbar navbar-default" role="navigation">
     <ul class="nav navbar-nav">
       <li class="hidden-xs"><a class="navbar-brand" href="#"><%= current_user ? current_user.display_name : "" %></a></li>
-      <li class="sidebar-form">
-        <form class="input-group" border="0" id="af" name="af" role="search" action="/archive.php">
-          <input class="form-control" id="aa" name="aa" placeholder="Search" type="text">
-          <span class="input-group-btn">  
-            <button type="submit" class="btn btn-md" id="as" name="as" value="Go"><i class="glyphicon glyphicon-search"></i></button>
-          </span>
-        </form>
-      </li>
+      <% unless params[:action] == "gantt" %>
+        <li class="sidebar-form">
+          <%= search_form_for @q, class: 'input-group' do |f| %>
+            <%= f.search_field :content_cont, class: "form-control", placeholder: "搜索" %>
+            <span class="input-group-btn">  
+              <button type="submit" class="btn btn-md" id="as" name="as" value="Go"><i class="glyphicon glyphicon-search"></i></button>
+            </span>
+          <% end %>
+        </li>
+      <% end %>
       <% if current_user %>
       <li class="<%= params[:action] == 'gantt' ? 'active' : ''%>" style="width: 100%;">
         <a href="/tasks/gantt"><i class="glyphicon glyphicon-calendar"></i> 甘特图</a>

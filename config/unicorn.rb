@@ -4,7 +4,7 @@ app_path = File.expand_path(File.dirname(__FILE__) + '/..')
 
 # The number of worker processes you have here should equal the number of CPU
 # cores your server has.
-worker_processes (ENV['RAILS_ENV'] == 'production' ? 2 : 1)
+worker_processes (ENV['RAILS_ENV'] == 'production' ? 1 : 1)
 
 # You can listen on a port or a socket. Listening on a socket is good in a
 # production environment, but listening on a port can be useful for local

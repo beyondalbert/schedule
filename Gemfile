@@ -54,3 +54,5 @@ gem 'bootstrap-sass', '~> 3.3.6'
 gem 'momentjs-rails', '>= 2.9.0'
 
 gem 'unicorn'
+
+gem 'ransack'
