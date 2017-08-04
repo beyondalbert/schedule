@@ -1,3 +1,5 @@
 $('#current-tasks-list').html("<%= escape_javascript(render partial: "list", locals: {tasks: @current_tasks}) %>");
 $('#tasks-list').html("<%= escape_javascript(render partial: "list", locals: {tasks: @history_tasks}) %>");
+$('#history-paginate-div').html("<%= escape_javascript(render partial: "paginate_div", locals: {tasks: @history_tasks}) %>");
+
 show_flash_msg("修改状态成功！", "alert-success");

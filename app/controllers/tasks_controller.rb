@@ -54,7 +54,7 @@ class TasksController < ApplicationController
     @task.update!(status: params[:status] == "0" ? 1 : 0)
 
     @current_tasks = current_user.tasks.where(status: 0).reverse_order
-    @history_tasks = current_user.tasks.where(status: 1)
+    @history_tasks = current_user.tasks.where(status: 1).paginate(:page => params[:page], :per_page => 10)
   end
 
   def gantt
