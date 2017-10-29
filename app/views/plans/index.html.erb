@@ -1,0 +1,181 @@
+<div class="col-sm-6">
+  <form id="add-plan-form">
+    <div id="date-range" class="row" style="margin: 0px 0px;">
+	    <div class='col-sm-6' style="padding: 0px;">
+	    	<div class="form-group">
+	    		<div class='input-group'>
+	    			<input id="plan-start" type='text' name='plan[start]' class="form-control" placeholder="开始时间" />
+	    			<span class="input-group-addon">
+	    				<span class="glyphicon glyphicon-calendar"></span>
+	    			</span>
+	    		</div>
+	    	</div>
+	    </div>
+	    <div class='col-sm-6' style="padding: 0px;">
+	    	<div class="form-group">
+	    		<div class='input-group'>
+	    			<input id="plan-end" type='text' name="plan[end]" class="form-control" placeholder="结束时间"  />
+	    			<span class="input-group-addon">
+	    				<span class="glyphicon glyphicon-calendar"></span>
+	    			</span>
+	    		</div>
+	    	</div>
+	    </div>
+    </div>
+    <div class="form-group">
+	    <div class="input-group">
+	    	<input type="text" name="plan[name]" class="form-control" placeholder="计划名字～">
+	    	<span class="input-group-btn">
+	    		<button id="plan-add-btn" class="btn btn-default" type="button">添加</button>
+	    	</span>
+      </div>
+    </div>
+  </form>
+
+  <div id="current-plans">
+    <%= render partial: 'list', locals: {plans: @current_plans, status: 'current'}%>
+  </div>
+</div>
+
+<div id="plan-destroy-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">是否删除该计划？</h4>
+      </div>
+      <div class="modal-body">
+        <p id="plan-title"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <a id="plan-destroy-a" data-remote="true" class="btn btn-danger" rel="nofollow" data-method="delete" href="">删除</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="plan-edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改计划</h4>
+      </div>
+      <div class="modal-body">
+        <form id="plan-edit-form">
+          <div id="edit-date-range" class="row" style="margin: 0px 0px;">
+		      <div class="form-group col-sm-6"  style="padding: 0px;">
+		      	<div class='input-group'>
+		      		<input id="plan-start-edit" type='text' name='plan[start]' class="form-control" placeholder="开始时间"/>
+		      		<span class="input-group-addon">
+		      			<span class="glyphicon glyphicon-calendar"></span>
+		      		</span>
+		      	</div>
+		      </div>
+
+		      <div class="form-group col-sm-6"  style="padding: 0px;">
+		      	<div class='input-group'>
+		      		<input id="plan-end-edit" type='text' name="plan[end]" class="form-control" placeholder="结束时间" />
+		      		<span class="input-group-addon">
+		      			<span class="glyphicon glyphicon-calendar"></span>
+		      		</span>
+		      	</div>
+		      </div>
+		    </div>
+	      <div class="form-group">
+	      	<input id="plan-name-edit" type="text" name="plan[name]" class="form-control">
+	      </div><!-- /input-group -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button id="plan-edit-btn" type="button" class="btn btn-primary">修改</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+	$('#date-range').dateRangePicker(
+	{
+		separator : ' to ',
+		language: 'cn',
+		getValue: function()
+		{
+			if ($('#plan-start').val() && $('#plan-end').val() )
+				return $('#plan-start').val() + ' to ' + $('#plan-end').val();
+			else
+				return '';
+		},
+		setValue: function(s,s1,s2)
+		{
+			$('#plan-start').val(s1);
+			$('#plan-end').val(s2);
+		}
+	});
+
+	$('#edit-date-range').dateRangePicker(
+	{
+		separator : ' to ',
+		language: 'cn',
+		getValue: function()
+		{
+			if ($('#plan-start-edit').val() && $('#plan-end-edit').val() )
+				return $('#plan-start-edit').val() + ' to ' + $('#plan-end-edit').val();
+			else
+				return '';
+		},
+		setValue: function(s,s1,s2)
+		{
+			$('#plan-start-edit').val(s1);
+			$('#plan-end-edit').val(s2);
+		}
+	});
+
+	$('#plan-add-btn').click(function() {
+		$.ajax({
+			url: "/plans",
+			type: 'POST',
+			data: $('#add-plan-form').serialize(),
+			success: function(data, textStatus, jqXHR) {
+				console.log("success!");
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log("failed!");
+			}
+		});
+  });
+
+
+  $(document).on('click', '.plan-destroy', function() {
+  	$('#plan-destroy-modal').modal('toggle');
+  	$('#plan-title').text($(this).parents('.panel-heading').find('.panel-title').text());
+  	$('#plan-destroy-a').attr('href', "/plans/" + $(this).parents('.panel-default').data('id'));
+  	return false;
+  });
+
+  $(document).on('click', '.plan-edit', function() {
+    $('#plan-edit-modal').modal('toggle');
+    $('#plan-start-edit').val($(this).parents('.panel-heading').find('.plan-start').text());
+    $('#plan-end-edit').val($(this).parents('.panel-heading').find('.plan-end').text());
+    $('#plan-name-edit').val($(this).parents('.panel-heading').find('.plan-name').text());
+    $('#plan-edit-btn').data('id', $(this).parents('.panel-default').data('id'));
+    return false;
+    });
+
+  $('#plan-edit-btn').click(function() {
+    $.ajax({
+      url: '/plans/' + $(this).data('id'),
+      type: 'PUT',
+      data: $('#plan-edit-form').serialize(),
+			success: function(data, textStatus, jqXHR) {
+				console.log("success!");
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log("failed!");
+			}
+      });
+    });
+
+</script>

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   root :to => 'home#index'
   get 'tasks/gantt'
   get 'tasks/gantt_data'
@@ -6,6 +7,7 @@ Rails.application.routes.draw do
   resources :users
   resources :tasks
   resources :sessions
+  resources :plans
 
   get "login" => "sessions#new", :as => "login"
   get "logout" => "sessions#destroy", :as => "logout"

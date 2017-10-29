@@ -1,0 +1,34 @@
+<% plans.each do |plan| %>
+  <div class="panel panel-default" data-id="<%= plan.id %>">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <span class="plan-name"><%= plan.name %></span>[
+        <span class="plan-start"><%= plan.start.localtime.strftime('%F') %></span> ~ 
+        <span class="plan-end"><%= plan.end.localtime.strftime('%F') %></span>]
+      </h3>
+      <div style="float: right;margin-top:-15px">
+        <a href="#" class="plan-destroy"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+        <a href="#" class="plan-edit" style="margin-left: 10px;"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+        <a href="#" class="plan-add" style="margin-left: 10px;"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></a>
+        <a href="#" class="plan-done" style="margin-left: 10px;"><span class="glyphicon glyphicon-check" aria-hidden="true"></span></a>
+        <a href="#" class="plan-gantt" style="margin-left: 10px;"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></a>
+      </div>
+    </div>
+
+    <div class="panel-body table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>任务内容</th>
+            <th>状态</th>
+            <th>时间</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="plan-tasks">
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>

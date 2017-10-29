@@ -18,8 +18,11 @@
         <a href="/tasks/gantt"><i class="glyphicon glyphicon-calendar"></i> 甘特图</a>
       </li>
       
-      <li class="<%= params[:action] == 'index' ? 'active' : ''%>" style="width: 100%;">
+      <li class="<%= params[:action] == 'index' && params[:controller] == 'tasks' ? 'active' : ''%>" style="width: 100%;">
         <a href="/tasks"><i class="glyphicon glyphicon-list-alt"></i> 任务列表</a>
+      </li>
+      <li class="<%= params[:controller] == 'plans' ? 'active' : ''%>" style="width: 100%;">
+        <a href="/plans"><i class="glyphicon glyphicon-list-alt"></i> 计划</a>
       </li>
       <li style="width: 100%;">
         <a href="/logout"><i class="glyphicon glyphicon-log-out"></i> 退出</a>

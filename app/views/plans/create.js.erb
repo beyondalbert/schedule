@@ -1,0 +1,2 @@
+$('#current-plans').html("<%= escape_javascript(render partial: "list", locals: {plans: @current_plans, status: 'current'}) %>");
+show_flash_msg("添加成功！", "alert-success");

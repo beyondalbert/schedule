@@ -14,7 +14,7 @@
 	  <div class='col-sm-6' style="padding: 0px;">
 	  	<div class="form-group">
 	  		<div class='input-group'>
-	  			<input id="task-end" itype='text' name="task[end]" class="form-control" placeholder="结束时间"  />
+	  			<input id="task-end" type='text' name="task[end]" class="form-control" placeholder="结束时间"  />
 	  			<span class="input-group-addon">
 	  				<span class="glyphicon glyphicon-calendar"></span>
 	  			</span>
@@ -193,7 +193,7 @@
 		});
 	});
 
-$('#task-edit-btn').click(function() {
+  $('#task-edit-btn').click(function() {
     $.ajax({
       url: '/tasks/' + $(this).data('id'),
       type: 'PUT',
@@ -207,7 +207,7 @@ $('#task-edit-btn').click(function() {
       });
     });
 
-$(document).on('click', '.task-done', function() {
+  $(document).on('click', '.task-done', function() {
     $.ajax({
       url: "/tasks/change_status",
       type: 'PUT',
@@ -220,7 +220,7 @@ $(document).on('click', '.task-done', function() {
 			}
       });
     })
-$(document).on('click', '.task-edit', function() {
+  $(document).on('click', '.task-edit', function() {
     $('#task-edit-modal').modal('toggle');
     $('#task-start-edit').val($(this).parent().parent().find('.task-start').text());
     $('#task-end-edit').val($(this).parent().parent().find('.task-end').text());
@@ -228,13 +228,13 @@ $(document).on('click', '.task-edit', function() {
     $('#task-edit-btn').data('id', $(this).parent().parent().data('id'));
     return false;
     });
-$(document).on('click', '.task-destroy', function() {
-	$('#task-destroy-modal').modal('toggle');
-	$('#task-title').text($(this).parent().parent().find('.task-content').text());
-	$('#task-destroy-a').attr('href', "/tasks/" + $(this).parent().parent().data('id'));
-	return false;
-})
-$('#task-destroy-a').click(function() {
-	$('#task-destroy-modal').modal('toggle');
-})
+  $(document).on('click', '.task-destroy', function() {
+  	$('#task-destroy-modal').modal('toggle');
+  	$('#task-title').text($(this).parent().parent().find('.task-content').text());
+  	$('#task-destroy-a').attr('href', "/tasks/" + $(this).parent().parent().data('id'));
+  	return false;
+  })
+  $('#task-destroy-a').click(function() {
+  	$('#task-destroy-modal').modal('toggle');
+  })
 </script>

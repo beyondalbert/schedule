@@ -1,0 +1,3 @@
+$('#current-plans').html("<%= escape_javascript(render partial: "list", locals: {plans: @current_plans, status: 'current'}) %>");
+$('#plan-edit-modal').modal('toggle');
+show_flash_msg("更新成功！", "alert-success");
